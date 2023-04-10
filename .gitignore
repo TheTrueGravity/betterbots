@@ -5,3 +5,4 @@ logs
 tsconfig.json
 __null
 .vscode
+lib
