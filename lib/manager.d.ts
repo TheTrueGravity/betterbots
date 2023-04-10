@@ -9,7 +9,7 @@ export interface ManagerConfig {
 }
 export interface IManager {
 }
-export default class Manager implements IManager {
+export declare class Manager implements IManager {
     private config;
     private LOGGER;
     private bots;

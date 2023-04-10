@@ -1,2 +1,1 @@
-import './manager';
-import './createWorker';
+export * as Manager from './manager';

@@ -16,7 +16,8 @@
     "format": "prettier --write \"src/**/*.ts\" \"lib/**/*.js\" \"__tests__/**/*.ts\"",
     "prepair": "npm run build",
     "prepublishOnly": "npm test && npm run build",
-    "version": "npm run format && git add -A src"
+    "version": "npm run format && git add -A src",
+    "run-test": "npm run build && node lib/test/index.js"
   },
   "repository": {
     "type": "git",

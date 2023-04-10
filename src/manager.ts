@@ -15,7 +15,7 @@ export interface ManagerConfig {
 
 export interface IManager {}
 
-export default class Manager implements IManager {
+export class Manager implements IManager {
     private config: ManagerConfig
     private LOGGER: Logger
     private bots: bot[]
