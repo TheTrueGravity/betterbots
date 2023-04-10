@@ -4,3 +4,4 @@ push.bat
 logs
 tsconfig.json
 __null
+.vscode
