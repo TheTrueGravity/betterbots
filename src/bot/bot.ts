@@ -51,8 +51,8 @@ export interface BotOptions {
 }
 
 export enum Deployment {
-    Stable,
-    Development
+    Stable = "stable",
+    Development = "development"
 }
 export enum AuthLevel {
     User,

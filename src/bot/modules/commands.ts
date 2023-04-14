@@ -21,6 +21,8 @@ export default function Commands(bot: Bot, commandsFolder: PathLike) {
                 dir,
                 file.split('.')[0]
             ))
+            
+            if (pull.default) { pull = pull.default }
 
             if (file == '_category.js') {
                 bot.Categories.set(pull.name, pull)

@@ -1,14 +1,8 @@
 const { Bot: _bot } = require('../lib')
 const { Bot, Deployment } = _bot
-const { Tasks } = require('../lib/bot/modules/tasks')
-const { Collection } = require('discord.js')
+const { config } = require('dotenv')
 
-// Task testing
-// const tasks = new Collection()
-// const taskTable = Tasks(tasks, 'D:/code/Discord/BetterBots/test/tasks')
-
-// console.log(tasks.get("Task 1"))
-// console.log(taskTable.toString())
+config()
 
 const bot = new Bot({
     logToFile: true,
@@ -19,6 +13,6 @@ const bot = new Bot({
     deployment: Deployment.Stable,
     prefixes: '!',
     testers: [],
-    token: 'NzU1NDQ5OTQwNjUzODk5OTA3.Gj2A_Z.GgO5sZUhVCEKqdjbPJokecjc574yMusFgKo22I',
+    token: process.env.TOKEN,
     version: '1.0.0'
 })
