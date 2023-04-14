@@ -70,7 +70,7 @@ export enum AuthLevel {
 export class Bot implements IBot {
     private LOGGER: Logger | _logger
     private CONFIGDIR: string
-    
+
     private TOKEN: string
 
     private COMMANDSDIR: string
@@ -95,7 +95,7 @@ export class Bot implements IBot {
         const tasks: Collection<string, ITask> = new Collection()
         const _tasks = Tasks(tasks, this.TASKSDIR)
 
-        tasks.forEach(async task => {
+        tasks.forEach(async (task) => {
             if (!task.enabled) return
 
             if (task.init) await task.init(this)
@@ -162,21 +162,19 @@ export class Bot implements IBot {
                         })
                     }
                 }
-
-
             }
 
-            parentPort?.on("message", async message => {
+            parentPort?.on('message', async (message) => {
                 switch (message.type) {
-                    case "ping":
+                    case 'ping':
                         parentPort?.postMessage({
-                            type: "pong"
+                            type: 'pong'
                         })
                         break
-                    case "init":
+                    case 'init':
                         this.init()
                         break
-                    case "start":
+                    case 'start':
                         this.start()
                         break
                     default:
@@ -231,7 +229,7 @@ export class Bot implements IBot {
         this.CLIENT.on('messageCreate', (message) =>
             handleMessage(this, message, this.LOGGER)
         )
-        
+
         this.TOKEN = botOptions.token
 
         this.CONFIGDIR = botOptions.configDir
