@@ -1,4 +1,4 @@
-import { isMainThread, Worker, parentPort } from 'worker_threads'
+import { isMainThread, parentPort } from 'worker_threads'
 import Logger, { LogLevel } from 'betterjslogger'
 import { ICommand } from './interfaces/ICommand'
 import { ICategory } from './interfaces/ICategory'
@@ -88,7 +88,7 @@ export class Bot implements IBot {
 
     private serverHandler: ServerHandler
 
-    private async init() {
+    private init(): void {
         const commands = Commands(this, this.COMMANDSDIR)
 
         const tasks: Collection<string, ITask> = new Collection()
@@ -116,12 +116,12 @@ export class Bot implements IBot {
         this.LOGGER.log(LogLevel.VERBOSE, commands.toString())
         this.LOGGER.log(LogLevel.VERBOSE, _tasks.toString())
     }
-    private async start() {
+    private start(): void {
         this.LOGGER.log(LogLevel.INFO, 'Client logging in...')
         this.CLIENT.login(this.TOKEN)
     }
 
-    constructor(
+    public constructor(
         botOptions: BotOptions,
         clientOptions: ClientOptions = {
             intents: [
@@ -182,13 +182,29 @@ export class Bot implements IBot {
             })
         } else {
             this.LOGGER = new Logger({
-                logToFile: false,
+                logToFile: botOptions.logToFile,
                 logFileName: botOptions.logFileName,
                 logFolder: botOptions.logFolder
             })
-            this.init()
-            this.start()
         }
+        
+        this.TOKEN = botOptions.token
+
+        this.CONFIGDIR = botOptions.configDir
+        this.COMMANDSDIR = botOptions.commandFolder
+        this.TASKSDIR = botOptions.tasksFolder
+
+        this.DEPLOYMENT = botOptions.deployment
+        this.VERSION = botOptions.version
+        this.PREFIXES = botOptions.prefixes
+        this.TESTERS = botOptions.testers
+
+        this.COMMANDS = new Collection()
+        this.ALIASES = new Collection()
+        this.CATEGORIES = new Collection()
+        this.CATEGORYCOMMANDLIST = new Collection()
+
+        this.serverHandler = ServerHandler.getInstance(this)
 
         this.CLIENT.on('ready', async () => {
             this.LOGGER.log(
@@ -230,24 +246,11 @@ export class Bot implements IBot {
         this.CLIENT.on('messageCreate', (message) =>
             handleMessage(this, message, this.LOGGER)
         )
-
-        this.TOKEN = botOptions.token
-
-        this.CONFIGDIR = botOptions.configDir
-        this.COMMANDSDIR = botOptions.commandFolder
-        this.TASKSDIR = botOptions.tasksFolder
-
-        this.DEPLOYMENT = botOptions.deployment
-        this.VERSION = botOptions.version
-        this.PREFIXES = botOptions.prefixes
-        this.TESTERS = botOptions.testers
-
-        this.COMMANDS = new Collection()
-        this.ALIASES = new Collection()
-        this.CATEGORIES = new Collection()
-        this.CATEGORYCOMMANDLIST = new Collection()
-
-        this.serverHandler = ServerHandler.getInstance(this)
+        
+        if (isMainThread) {
+            this.init()
+            this.start()
+        }
     }
 
     public isMod(user: User, guild: Guild): boolean {

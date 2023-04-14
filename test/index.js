@@ -11,6 +11,14 @@ const { Collection } = require('discord.js')
 // console.log(taskTable.toString())
 
 const bot = new Bot({
-    deployment: Deployment.Release,
+    logToFile: true,
+    logFolder: 'D:\\code\\Discord\\BetterBotsTest\\logs',
+    commandFolder: 'D:\\code\\Discord\\BetterBotsTest\\build\\commands',
+    tasksFolder: 'D:\\code\\Discord\\BetterBotsTest\\build\\tasks',
+    configDir: 'D:\\code\\Discord\\BetterBotsTest\\build\\config',
+    deployment: Deployment.Stable,
+    prefixes: '!',
+    testers: [],
+    token: 'NzU1NDQ5OTQwNjUzODk5OTA3.Gj2A_Z.GgO5sZUhVCEKqdjbPJokecjc574yMusFgKo22I',
     version: '1.0.0'
 })

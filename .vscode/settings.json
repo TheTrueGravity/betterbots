@@ -9,6 +9,7 @@
     "CONFIGDIR",
     "jestconfig",
     "prepair",
+    "TASKDIR",
     "TASKSDIR"
   ]
 }
