@@ -13,11 +13,11 @@
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "tsc",
-    "format": "prettier --write \"src/**/*.ts\" \"lib/**/*.js\" \"__tests__/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.ts\" \"lib/**/*.js\" \"__tests__/**/*.ts\" \"test/**/*.js\"",
     "prepair": "npm run build",
     "prepublishOnly": "npm test && npm run build",
     "version": "npm run format && git add -A src",
-    "run-test": "npm run build && node lib/test/index.js"
+    "run-test": "npm run build && node test/index.js"
   },
   "repository": {
     "type": "git",
@@ -31,6 +31,7 @@
   },
   "homepage": "https://github.com/TheTrueGravity/betterbots#readme",
   "dependencies": {
+    "ascii-table3": "^0.8.2",
     "betterjslogger": "^1.0.2",
     "discord.js": "^14.9.0"
   },
