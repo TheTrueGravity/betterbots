@@ -186,6 +186,8 @@ export class Bot implements IBot {
                 logFileName: botOptions.logFileName,
                 logFolder: botOptions.logFolder
             })
+            this.init()
+            this.start()
         }
 
         this.CLIENT.on('ready', async () => {
