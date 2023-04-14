@@ -47,6 +47,7 @@ export interface BotOptions {
     testers: string[]
     configDir: string
     commandFolder: string
+    tasksFolder: string
     token: string
 }
 
@@ -235,7 +236,7 @@ export class Bot implements IBot {
 
         this.CONFIGDIR = botOptions.configDir
         this.COMMANDSDIR = botOptions.commandFolder
-        this.TASKSDIR = botOptions.commandFolder
+        this.TASKSDIR = botOptions.tasksFolder
 
         this.DEPLOYMENT = botOptions.deployment
         this.VERSION = botOptions.version
