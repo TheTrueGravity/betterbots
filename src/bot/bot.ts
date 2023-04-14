@@ -1,5 +1,13 @@
 import { isMainThread, Worker, parentPort } from 'worker_threads'
 import Logger, { LogLevel } from 'betterjslogger'
+import { ICommand } from './interfaces/ICommand'
+import { ICategory } from './interfaces/ICategory'
+import { ServerHandler } from './handlers/serverHandler'
+import { ActivityType } from 'discord.js'
+import { handleMessage } from './handlers/messageHandler'
+import Commands from './modules/commands'
+import Tasks from './modules/tasks'
+import { ITask, TaskTypes } from './interfaces/ITask'
 import {
     Client,
     ClientOptions,
@@ -8,15 +16,6 @@ import {
     Partials,
     User
 } from 'discord.js'
-import {} from './handlers/messageHandler'
-import ICommand from './interfaces/ICommand'
-import ICategory from './interfaces/ICategory'
-import { ServerHandler } from './handlers/serverHandler'
-import { ActivityType } from 'discord.js'
-import { handleMessage } from './handlers/messageHandler'
-import Commands from './modules/commands'
-import Tasks from './modules/tasks'
-import { ITask, TaskTypes } from './interfaces/ITask'
 
 export interface IBot {
     get ConfigDir(): string

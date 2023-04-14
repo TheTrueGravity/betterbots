@@ -1,7 +1,7 @@
 import { Message } from 'discord.js'
 import { AuthLevel, Bot } from '../bot'
 
-export default interface ICommand {
+export interface ICommand {
     name: string
     aliases: string[]
     category: string
