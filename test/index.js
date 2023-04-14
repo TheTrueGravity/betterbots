@@ -14,5 +14,6 @@ const bot = new Bot({
     prefixes: '!',
     testers: [],
     token: process.env.TOKEN,
-    version: '1.0.0'
+    version: '1.0.0',
+    mainEmbedColour: 'Random'
 })

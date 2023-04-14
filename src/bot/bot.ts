@@ -3,7 +3,7 @@ import Logger, { LogLevel } from 'betterjslogger'
 import { ICommand } from './interfaces/ICommand'
 import { ICategory } from './interfaces/ICategory'
 import { ServerHandler } from './handlers/serverHandler'
-import { ActivityType } from 'discord.js'
+import { ActivityType, ColorResolvable, Message } from 'discord.js'
 import { handleMessage } from './handlers/messageHandler'
 import Commands from './modules/commands'
 import Tasks from './modules/tasks'
@@ -16,6 +16,7 @@ import {
     Partials,
     User
 } from 'discord.js'
+import { ICommandSimple } from './interfaces/ICommand'
 
 export interface IBot {
     get ConfigDir(): string
@@ -29,7 +30,7 @@ export interface IBot {
     get Commands(): Collection<string, ICommand>
     get Aliases(): Collection<string, string>
     get Categories(): Collection<string, ICategory>
-    get CategoryCommandList(): Collection<string, object>
+    get CategoryCommandList(): Collection<string, ICommandSimple[]>
 }
 
 export interface _logger {
@@ -48,11 +49,13 @@ export interface BotOptions {
     commandFolder: string
     tasksFolder: string
     token: string
+    mainEmbedThumbnail?: string
+    mainEmbedColour: ColorResolvable
 }
 
 export enum Deployment {
-    Stable = "stable",
-    Development = "development"
+    Stable = 'stable',
+    Development = 'development'
 }
 export enum AuthLevel {
     User,
@@ -80,11 +83,13 @@ export class Bot implements IBot {
     private VERSION: string
     private PREFIXES: string | string[]
     private TESTERS: string[]
+    private MAINEMBEDTHUMBNAIL: string | undefined
+    private MAINEMBEDCOLOUR: ColorResolvable
 
     private COMMANDS: Collection<string, ICommand>
     private ALIASES: Collection<string, string>
     private CATEGORIES: Collection<string, ICategory>
-    private CATEGORYCOMMANDLIST: Collection<string, Object>
+    private CATEGORYCOMMANDLIST: Collection<string, ICommandSimple[]>
 
     private serverHandler: ServerHandler
 
@@ -187,7 +192,7 @@ export class Bot implements IBot {
                 logFolder: botOptions.logFolder
             })
         }
-        
+
         this.TOKEN = botOptions.token
 
         this.CONFIGDIR = botOptions.configDir
@@ -198,6 +203,8 @@ export class Bot implements IBot {
         this.VERSION = botOptions.version
         this.PREFIXES = botOptions.prefixes
         this.TESTERS = botOptions.testers
+        this.MAINEMBEDTHUMBNAIL = botOptions.mainEmbedThumbnail
+        this.MAINEMBEDCOLOUR = botOptions.mainEmbedColour
 
         this.COMMANDS = new Collection()
         this.ALIASES = new Collection()
@@ -246,15 +253,42 @@ export class Bot implements IBot {
         this.CLIENT.on('messageCreate', (message) =>
             handleMessage(this, message, this.LOGGER)
         )
-        
+
         if (isMainThread) {
             this.init()
             this.start()
         }
     }
 
-    public isMod(user: User, guild: Guild): boolean {
+    public isMod(user: User, guild: Guild) {
         return false
+    }
+
+    public checkAuthLevel(
+        authLevel: AuthLevel,
+        bot: Bot,
+        message: Message<boolean>
+    ) {
+        switch (authLevel) {
+            case AuthLevel.Mod:
+                if (!message.guild) return false
+                if (!bot.isMod(message.author, message.guild)) return
+                return true
+            case AuthLevel.Admin:
+                if (
+                    !message.member?.roles.highest.permissions.has(
+                        'Administrator'
+                    )
+                )
+                    return
+                return true
+            case AuthLevel.Owner:
+                if (!message.guild) return false
+                if (message.member?.id != message.guild.ownerId) return
+                return true
+            default:
+                return true
+        }
     }
 
     public get ConfigDir(): string {
@@ -276,6 +310,12 @@ export class Bot implements IBot {
     public get Testers(): string[] {
         return this.TESTERS
     }
+    public get MainEmbedThumbnail(): string | undefined {
+        return this.MAINEMBEDTHUMBNAIL
+    }
+    public get MainEmbedColour(): ColorResolvable {
+        return this.MAINEMBEDCOLOUR
+    }
 
     public get Commands(): Collection<string, ICommand> {
         return this.COMMANDS
@@ -286,7 +326,7 @@ export class Bot implements IBot {
     public get Categories(): Collection<string, ICategory> {
         return this.CATEGORIES
     }
-    public get CategoryCommandList(): Collection<string, Object> {
+    public get CategoryCommandList(): Collection<string, ICommandSimple[]> {
         return this.CATEGORYCOMMANDLIST
     }
 }

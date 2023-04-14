@@ -8,6 +8,8 @@
     "COMMANDSDIR",
     "CONFIGDIR",
     "jestconfig",
+    "MAINEMBEDCOLOUR",
+    "MAINEMBEDTHUMBNAIL",
     "prepair",
     "TASKDIR",
     "TASKSDIR"

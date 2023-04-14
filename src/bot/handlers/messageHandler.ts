@@ -4,25 +4,6 @@ import { AuthLevel, Deployment, _logger } from '../bot'
 import { createErrorEmbed, reply } from '../modules/embeds'
 import { Bot } from '../bot'
 
-function checkAuthLevel(authLevel: AuthLevel, bot: Bot, message: Message) {
-    switch (authLevel) {
-        case AuthLevel.Mod:
-            if (!message.guild) return false
-            if (!bot.isMod(message.author, message.guild)) return
-            return true
-        case AuthLevel.Admin:
-            if (!message.member?.roles.highest.permissions.has('Administrator'))
-                return
-            return true
-        case AuthLevel.Owner:
-            if (!message.guild) return false
-            if (message.member?.id != message.guild.ownerId) return
-            return true
-        default:
-            return true
-    }
-}
-
 export async function handleMessage(
     bot: Bot,
     message: Message,
@@ -88,8 +69,8 @@ export async function handleMessage(
     if (!category) return
 
     if (
-        !checkAuthLevel(category.authLevel, bot, message) ||
-        !checkAuthLevel(command.authLevel, bot, message)
+        !bot.checkAuthLevel(category.authLevel, bot, message) ||
+        !bot.checkAuthLevel(command.authLevel, bot, message)
     ) {
         await message.reply(
             `You do not have permission to run the command ${command.name}`
