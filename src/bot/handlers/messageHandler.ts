@@ -1,7 +1,7 @@
 import { Message } from 'discord.js'
 import { ILogger, LogLevel } from 'betterjslogger'
 import { AuthLevel, Deployment, _logger } from '../bot'
-import { createErrorEmbed, reply } from '../modules/embeds'
+import { createErrorEmbed, replyWithEmbed } from '../modules/embeds'
 import { Bot } from '../bot'
 
 export async function handleMessage(
@@ -81,7 +81,7 @@ export async function handleMessage(
 
     if (run instanceof Error) {
         Logger.log(LogLevel.ERROR, run.message)
-        await reply(
+        await replyWithEmbed(
             message,
             await createErrorEmbed(
                 `There was an error running the command: ${command.name}`,

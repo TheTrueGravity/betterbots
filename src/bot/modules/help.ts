@@ -1,7 +1,7 @@
 import { Message, ColorResolvable } from 'discord.js'
 import { AuthLevel, Bot } from '../bot'
 import { ICommand } from '../interfaces/ICommand'
-import { createErrorEmbed, createTitleEmbed, reply } from './embeds'
+import { createErrorEmbed, createTitleEmbed, replyWithEmbed } from './embeds'
 
 const help: ICommand = {
     name: 'help',
@@ -24,7 +24,7 @@ const help: ICommand = {
 
             for (const category of categories.values()) {
                 if (!bot.checkAuthLevel(category.authLevel, bot, message)) {
-                    await reply(
+                    await replyWithEmbed(
                         message,
                         await createErrorEmbed(
                             'You do not have the required permissions!',
@@ -39,7 +39,7 @@ const help: ICommand = {
 
             // console.log(description)
 
-            await reply(
+            await replyWithEmbed(
                 message,
                 await createTitleEmbed(
                     'Help',
@@ -62,7 +62,7 @@ const help: ICommand = {
             for (const category of categories.values()) {
                 if (category.name.toLowerCase() == args[0].toLowerCase()) {
                     if (!bot.checkAuthLevel(category.authLevel, bot, message)) {
-                        await reply(
+                        await replyWithEmbed(
                             message,
                             await createErrorEmbed(
                                 'You do not have the required permissions!',
@@ -96,7 +96,7 @@ const help: ICommand = {
                         description += '\n\n'
                     }
 
-                    await reply(
+                    await replyWithEmbed(
                         message,
                         await createTitleEmbed(
                             'Help',
@@ -131,7 +131,7 @@ const help: ICommand = {
                 if (!command) return
 
                 if (!bot.checkAuthLevel(command.authLevel, bot, message)) {
-                    await reply(
+                    await replyWithEmbed(
                         message,
                         await createErrorEmbed(
                             'You do not have the required permissions!',
@@ -160,7 +160,7 @@ const help: ICommand = {
                 }
                 description += '\n\n'
 
-                await reply(
+                await replyWithEmbed(
                     message,
                     await createTitleEmbed(
                         'Help',
@@ -181,7 +181,7 @@ const help: ICommand = {
             if (!command) return
 
             if (!bot.checkAuthLevel(command.authLevel, bot, message)) {
-                await reply(
+                await replyWithEmbed(
                     message,
                     await createErrorEmbed(
                         'You do not have the required permissions!',
@@ -208,7 +208,7 @@ const help: ICommand = {
             }
             description += '\n\n'
 
-            await reply(
+            await replyWithEmbed(
                 message,
                 await createTitleEmbed(
                     'Help',
@@ -222,7 +222,7 @@ const help: ICommand = {
             return
         }
 
-        await reply(
+        await replyWithEmbed(
             message,
             await createErrorEmbed('Invalid command!', message.author)
         )

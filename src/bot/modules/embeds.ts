@@ -117,7 +117,7 @@ export async function createFieldsEmbed(
 }
 
 // Reply to a given message with an embed.
-export async function reply(
+export async function replyWithEmbed(
     message: Message,
     embed: EmbedBuilder
 ): Promise<Message<boolean>> {
