@@ -48,7 +48,7 @@ export class Manager implements IManager {
         }
 
         this.LOGGER = new Logger({
-            logToFile: false,
+            logToFile: config.logToFile,
             logFileName: config.logFileName,
             logFolder: config.logFolder
         })

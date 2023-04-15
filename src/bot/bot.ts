@@ -118,8 +118,8 @@ export class Bot implements IBot {
             }
         })
 
-        this.LOGGER.log(LogLevel.VERBOSE, commands.toString())
-        this.LOGGER.log(LogLevel.VERBOSE, _tasks.toString())
+        if (commands) this.LOGGER.log(LogLevel.VERBOSE, commands.toString())
+        if (_tasks) this.LOGGER.log(LogLevel.VERBOSE, _tasks.toString())
     }
     private start(): void {
         this.LOGGER.log(LogLevel.INFO, 'Client logging in...')
