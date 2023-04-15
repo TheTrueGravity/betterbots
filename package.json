@@ -1,6 +1,6 @@
 {
   "name": "betterbots",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "��#\u0000 \u0000b\u0000e\u0000t\u0000t\u0000e\u0000r\u0000b\u0000o\u0000t\u0000s\u0000\r\u0000 \u0000",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
