@@ -6,4 +6,3 @@ export { ICategory } from './bot/interfaces/ICategory'
 export { ICommand } from './bot/interfaces/ICommand'
 
 export * as embeds from './bot/modules/embeds'
-

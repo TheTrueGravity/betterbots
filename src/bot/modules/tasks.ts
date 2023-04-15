@@ -8,7 +8,7 @@ export default function Tasks(
     tasksDir: PathLike
 ) {
     if (!existsSync(tasksDir)) return
-    
+
     const table = new AsciiTable3('Tasks')
     table.setHeading('Task', 'Load status')
 

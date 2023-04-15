@@ -7,7 +7,7 @@ import { ICommand } from '../interfaces/ICommand'
 
 export default function Commands(bot: Bot, commandsFolder: PathLike) {
     if (!existsSync(commandsFolder)) return
-    
+
     const categories: ICategory[] = []
     const table = new ascii('Commands').setHeading('Command', 'Load status')
 

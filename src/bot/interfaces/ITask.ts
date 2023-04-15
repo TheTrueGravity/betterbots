@@ -28,7 +28,7 @@ export interface ITask {
     taskType: TaskTypes
     description: string
     interval?: number
-    
+
     /**
      * Executes when the task gets loaded in
      *
@@ -36,10 +36,10 @@ export interface ITask {
      * @returns Promise void
      */
     init?: (bot: Bot) => Promise<void>
-    
+
     /**
      * Called when the task gets executed
-     * 
+     *
      * @param bot The bot associated to the task
      * @param args The arguments passed in when the task is executed
      * @returns void
