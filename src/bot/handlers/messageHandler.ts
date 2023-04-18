@@ -73,18 +73,19 @@ export async function handleMessage(
         !bot.checkAuthLevel(command.authLevel, bot, message)
     ) {
         await message.reply(
-            `You do not have permission to run the command ${command.name}`
+            `You do not have permission to run the command: ${command.name}.`
         )
+        return
     }
 
-    const run = await command.run(bot, message, args, _args)
-
-    if (run instanceof Error) {
-        Logger.log(LogLevel.ERROR, run.message)
+    try {
+        const run = await command.run(bot, message, args, _args)
+    } catch (error: any) {
+        Logger.log(LogLevel.ERROR, `${error.message}\n\n${error.stack}`)
         await replyWithEmbed(
             message,
             await createErrorEmbed(
-                `There was an error running the command: ${command.name}`,
+                `There was an error running the command: ${command.name}.`,
                 message.author
             )
         )

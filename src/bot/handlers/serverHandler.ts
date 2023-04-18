@@ -5,45 +5,24 @@ import { Guild } from 'discord.js'
 import { Bot } from '../bot'
 
 export interface IServerHandler {
-    changePrefix(guild: Guild, prefix: string | string[]): Promise<void>
-    getPrefix(guild: Guild): Promise<string>
+    changePrefix(bot: Bot, guild: Guild, prefix: string | string[]): Promise<void>
+    getPrefix(bot: Bot, guild: Guild): Promise<string>
 }
 
 export class ServerHandler implements IServerHandler {
-    private static instance: ServerHandler
+    constructor() {}
 
-    private Bot: Bot
-
-    constructor(bot: Bot) {
-        if (ServerHandler.instance) {
-            throw new Error(
-                'ServerHandler is a singleton class and cannot be instantiated more than once.'
-            )
-        }
-
-        this.Bot = bot
-
-        ServerHandler.instance = this
-    }
-
-    public static getInstance(bot: Bot): ServerHandler {
-        if (!ServerHandler.instance) {
-            new ServerHandler(bot)
-        }
-        return ServerHandler.instance
-    }
-
-    async changePrefix(guild: Guild, prefix: string | string[]): Promise<void> {
+    async changePrefix(bot: Bot, guild: Guild, prefix: string | string[]): Promise<void> {
         const servers = await json.read(
-            path.join(this.Bot.ConfigDir, 'servers.json')
+            path.join(bot.ConfigDir, 'servers.json')
         )
         servers[guild.id]['prefix'] = prefix
-        await json.write(servers, path.join(this.Bot.ConfigDir, 'servers.json'))
+        await json.write(servers, path.join(bot.ConfigDir, 'servers.json'))
     }
 
-    async getPrefix(guild: Guild): Promise<string> {
+    async getPrefix(bot: Bot, guild: Guild): Promise<string> {
         const servers = await json.read(
-            path.join(this.Bot.ConfigDir, 'servers.json')
+            path.join(bot.ConfigDir, 'servers.json')
         )
         return servers[guild.id]['prefix']
     }

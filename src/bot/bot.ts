@@ -128,6 +128,7 @@ export class Bot implements IBot {
 
     public constructor(
         botOptions: BotOptions,
+        serverHandler: ServerHandler,
         clientOptions: ClientOptions = {
             intents: [
                 'DirectMessages',
@@ -141,6 +142,12 @@ export class Bot implements IBot {
             partials: [Partials.Message, Partials.Channel, Partials.Reaction]
         }
     ) {
+        if (!serverHandler) {
+            this.serverHandler = new ServerHandler()
+        } else {
+            this.serverHandler = serverHandler
+        }
+            
         this.CLIENT = new Client(clientOptions)
 
         if (!isMainThread) {
@@ -211,7 +218,7 @@ export class Bot implements IBot {
         this.CATEGORIES = new Collection()
         this.CATEGORYCOMMANDLIST = new Collection()
 
-        this.serverHandler = ServerHandler.getInstance(this)
+        // this.serverHandler = ServerHandler.getInstance(this)
 
         this.CLIENT.on('ready', async () => {
             this.LOGGER.log(
@@ -248,7 +255,10 @@ export class Bot implements IBot {
             }
         })
         this.CLIENT.on('error', (err) => {
-            return this.LOGGER.log(LogLevel.ERROR, err.message)
+            return this.LOGGER.log(
+                LogLevel.ERROR,
+                `${err.message}\n\n${err.stack}`
+            )
         })
         this.CLIENT.on('messageCreate', (message) =>
             handleMessage(this, message, this.LOGGER)
@@ -272,16 +282,22 @@ export class Bot implements IBot {
         switch (authLevel) {
             case AuthLevel.Mod:
                 if (!message.guild) return false
-                if (!bot.isMod(message.author, message.guild)) return
-                return true
+                if (
+                    bot.isMod(message.author, message.guild) ||
+                    this.checkAuthLevel(AuthLevel.Admin, bot, message)
+                )
+                    return true
+
+                return
             case AuthLevel.Admin:
                 if (
-                    !message.member?.roles.highest.permissions.has(
+                    message.member?.roles.highest.permissions.has(
                         'Administrator'
-                    )
+                    ) ||
+                    this.checkAuthLevel(AuthLevel.Owner, bot, message)
                 )
-                    return
-                return true
+                    return true
+                return
             case AuthLevel.Owner:
                 if (!message.guild) return false
                 if (message.member?.id != message.guild.ownerId) return

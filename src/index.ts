@@ -1,5 +1,6 @@
 export { IManager, Manager, ManagerConfig } from './manager'
 export { Bot, AuthLevel, BotOptions, Deployment, IBot } from './bot/bot'
+export { ServerHandler } from './bot/handlers/serverHandler'
 
 export { ITask, TaskTypes } from './bot/interfaces/ITask'
 export { ICategory } from './bot/interfaces/ICategory'
