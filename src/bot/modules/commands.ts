@@ -1,9 +1,9 @@
 import { readdirSync, PathLike, existsSync } from 'fs'
 import { AsciiTable3 as ascii } from 'ascii-table3'
-import { AuthLevel, Bot } from '../bot'
+import Bot, { AuthLevel } from '../bot'
 import * as path from 'path'
-import { ICategory } from '../interfaces/ICategory'
-import { ICommand } from '../interfaces/ICommand'
+import ICategory from '../interfaces/ICategory'
+import ICommand from '../interfaces/ICommand'
 
 export default function Commands(bot: Bot, commandsFolder: PathLike) {
     if (!existsSync(commandsFolder)) return

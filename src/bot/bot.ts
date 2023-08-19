@@ -1,14 +1,9 @@
 import { isMainThread, parentPort } from 'worker_threads'
 import Logger, { LogLevel } from 'betterjslogger'
-import { ICommand } from './interfaces/ICommand'
-import { ICategory } from './interfaces/ICategory'
-import { ServerHandler } from './handlers/serverHandler'
-import { ActivityType, ColorResolvable, Message } from 'discord.js'
-import { handleMessage } from './handlers/messageHandler'
-import Commands from './modules/commands'
-import Tasks from './modules/tasks'
-import { ITask, TaskTypes } from './interfaces/ITask'
 import {
+    ActivityType,
+    ColorResolvable,
+    Message,
     Client,
     ClientOptions,
     Collection,
@@ -16,7 +11,23 @@ import {
     Partials,
     User
 } from 'discord.js'
-import { ICommandSimple } from './interfaces/ICommand'
+
+import { ServerHandler } from './handlers/serverHandler'
+
+import ITask from './interfaces/ITask'
+import ICategory from './interfaces/ICategory'
+import ICommand, { ICommandSimple } from './interfaces/ICommand'
+
+export enum Deployment {
+    Stable = 'stable',
+    Development = 'development'
+}
+export enum AuthLevel {
+    User,
+    Mod,
+    Admin,
+    Owner
+}
 
 export interface IBot {
     get ConfigDir(): string
@@ -31,10 +42,6 @@ export interface IBot {
     get Aliases(): Collection<string, string>
     get Categories(): Collection<string, ICategory>
     get CategoryCommandList(): Collection<string, ICommandSimple[]>
-}
-
-export interface _logger {
-    log(level: LogLevel, message: string): any
 }
 
 export interface BotOptions {
@@ -53,23 +60,11 @@ export interface BotOptions {
     mainEmbedColour: ColorResolvable
 }
 
-export enum Deployment {
-    Stable = 'stable',
-    Development = 'development'
-}
-export enum AuthLevel {
-    User,
-    Mod,
-    Admin,
-    Owner
+export interface _logger {
+    log(level: LogLevel, message: string): any
 }
 
-/**
- * The bot class
- *
- * @param botOptions The bot options
- */
-export class Bot implements IBot {
+export default class Bot implements IBot {
     private LOGGER: Logger | _logger
     private CONFIGDIR: string
 
@@ -93,42 +88,12 @@ export class Bot implements IBot {
 
     private serverHandler: ServerHandler
 
-    private init(): void {
-        const commands = Commands(this, this.COMMANDSDIR)
-
-        const tasks: Collection<string, ITask> = new Collection()
-        const _tasks = Tasks(tasks, this.TASKSDIR)
-
-        tasks.forEach(async (task) => {
-            if (!task.enabled) return
-
-            if (task.init) await task.init(this)
-
-            switch (task.taskType) {
-                case TaskTypes.onClientEvent:
-                    this.CLIENT.on(task.name, (...args) =>
-                        task.run(this, ...args)
-                    )
-                    break
-                case TaskTypes.scheduled:
-                    setInterval(() => task.run(this), task.interval)
-                    break
-                default:
-                    break
-            }
-        })
-
-        if (commands) this.LOGGER.log(LogLevel.VERBOSE, commands.toString())
-        if (_tasks) this.LOGGER.log(LogLevel.VERBOSE, _tasks.toString())
-    }
-    private start(): void {
-        this.LOGGER.log(LogLevel.INFO, 'Client logging in...')
-        this.CLIENT.login(this.TOKEN)
-    }
+    private init(): void {}
+    private start(): void {}
 
     public constructor(
         botOptions: BotOptions,
-        serverHandler: ServerHandler,
+        serverHandler?: ServerHandler,
         clientOptions: ClientOptions = {
             intents: [
                 'DirectMessages',
@@ -147,7 +112,7 @@ export class Bot implements IBot {
         } else {
             this.serverHandler = serverHandler
         }
-            
+
         this.CLIENT = new Client(clientOptions)
 
         if (!isMainThread) {
@@ -189,6 +154,10 @@ export class Bot implements IBot {
                         this.start()
                         break
                     default:
+                        this.LOGGER.log(
+                            LogLevel.ERROR,
+                            `Unexpected message from parent port of type ${message.type}`
+                        )
                         break
                 }
             })
@@ -217,8 +186,6 @@ export class Bot implements IBot {
         this.ALIASES = new Collection()
         this.CATEGORIES = new Collection()
         this.CATEGORYCOMMANDLIST = new Collection()
-
-        // this.serverHandler = ServerHandler.getInstance(this)
 
         this.CLIENT.on('ready', async () => {
             this.LOGGER.log(
@@ -260,9 +227,6 @@ export class Bot implements IBot {
                 `${err.message}\n\n${err.stack}`
             )
         })
-        this.CLIENT.on('messageCreate', (message) =>
-            handleMessage(this, message, this.LOGGER)
-        )
 
         if (isMainThread) {
             this.init()
@@ -273,7 +237,6 @@ export class Bot implements IBot {
     public isMod(user: User, guild: Guild) {
         return false
     }
-
     public checkAuthLevel(
         authLevel: AuthLevel,
         bot: Bot,

@@ -1,4 +1,4 @@
-import { Bot } from '../bot'
+import Bot from '../bot'
 
 /**
  * Task types for task modules
@@ -22,7 +22,7 @@ export enum TaskTypes {
  * @param {Promise<void>} init - Executes when the task gets loaded in
  * @param {void} run - Function called when the task is executed
  */
-export interface ITask {
+export default interface ITask {
     name: string
     enabled: boolean
     taskType: TaskTypes

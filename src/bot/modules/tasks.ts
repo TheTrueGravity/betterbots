@@ -1,7 +1,7 @@
 import { readdirSync, PathLike, existsSync } from 'fs'
 import { AsciiTable3 } from 'ascii-table3'
 import { Collection } from 'discord.js'
-import { ITask } from '../interfaces/ITask'
+import ITask from '../interfaces/ITask'
 
 export default function Tasks(
     tasks: Collection<string, ITask>,

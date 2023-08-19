@@ -1,6 +1,6 @@
 import { Message } from 'discord.js'
-import { AuthLevel, Bot } from '../bot'
-import { ICommand } from '../interfaces/ICommand'
+import Bot, { AuthLevel } from '../bot'
+import ICommand from '../interfaces/ICommand'
 import {
     createErrorEmbed,
     createTitleEmbed,
@@ -80,7 +80,10 @@ const help: ICommand = {
                     if (!commands) return
 
                     for (const command of commands) {
-                        if (!bot.checkAuthLevel(command.authLevel, bot, message)) continue
+                        if (
+                            !bot.checkAuthLevel(command.authLevel, bot, message)
+                        )
+                            continue
                         description += `**Name:** ${command.name}\n**Description**: ${command.description}`
                         if (command.aliases) {
                             description += `\n**Aliases** - ${command.aliases
@@ -227,7 +230,10 @@ const help: ICommand = {
 
         await replyWithEmbed(
             message,
-            await createErrorEmbed(`Invalid command or category: ${args[0]}`, message.author)
+            await createErrorEmbed(
+                `Invalid command or category: ${args[0]}`,
+                message.author
+            )
         )
         return
     }

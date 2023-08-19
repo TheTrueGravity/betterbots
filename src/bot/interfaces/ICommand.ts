@@ -1,5 +1,5 @@
 import { Message } from 'discord.js'
-import { AuthLevel, Bot } from '../bot'
+import Bot, { AuthLevel } from '../bot'
 
 /**
  * Command interface
@@ -12,7 +12,7 @@ import { AuthLevel, Bot } from '../bot'
  * @param {AuthLevel} authLevel - The authority level for user execution of the command
  * @param {Promise<void | Error>} run - The function run when the command is called
  */
-export interface ICommand {
+export default interface ICommand {
     name: string
     aliases: string[]
     category: string

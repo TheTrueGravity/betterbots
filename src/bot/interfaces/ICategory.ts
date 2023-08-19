@@ -8,7 +8,7 @@ import { AuthLevel } from '../bot'
  * @param {string} description - The description of the category
  * @param {AuthLevel} authLevel - The authority level of the category
  */
-export interface ICategory {
+export default interface ICategory {
     name: string
     description: string
     authLevel: AuthLevel

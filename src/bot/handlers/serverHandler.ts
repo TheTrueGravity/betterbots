@@ -2,17 +2,25 @@ import * as json from '../modules/json'
 import * as path from 'path'
 
 import { Guild } from 'discord.js'
-import { Bot } from '../bot'
+import Bot from '../bot'
 
 export interface IServerHandler {
-    changePrefix(bot: Bot, guild: Guild, prefix: string | string[]): Promise<void>
+    changePrefix(
+        bot: Bot,
+        guild: Guild,
+        prefix: string | string[]
+    ): Promise<void>
     getPrefix(bot: Bot, guild: Guild): Promise<string>
 }
 
 export class ServerHandler implements IServerHandler {
     constructor() {}
 
-    async changePrefix(bot: Bot, guild: Guild, prefix: string | string[]): Promise<void> {
+    async changePrefix(
+        bot: Bot,
+        guild: Guild,
+        prefix: string | string[]
+    ): Promise<void> {
         const servers = await json.read(
             path.join(bot.ConfigDir, 'servers.json')
         )
@@ -26,4 +34,7 @@ export class ServerHandler implements IServerHandler {
         )
         return servers[guild.id]['prefix']
     }
+
+    async guildJoin(bot: Bot, guild: Guild): Promise<void> {}
+    async guildLeave(bot: Bot, guild: Guild): Promise<void> {}
 }

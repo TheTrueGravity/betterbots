@@ -1,8 +1,7 @@
 import { Message } from 'discord.js'
 import { ILogger, LogLevel } from 'betterjslogger'
-import { AuthLevel, Deployment, _logger } from '../bot'
+import Bot, { AuthLevel, Deployment, _logger } from '../bot'
 import { createErrorEmbed, replyWithEmbed } from '../modules/embeds'
-import { Bot } from '../bot'
 
 export async function handleMessage(
     bot: Bot,

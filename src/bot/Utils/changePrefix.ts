@@ -1,5 +1,5 @@
-import { AuthLevel, Bot } from '../bot'
-import { ICommand } from '../interfaces/ICommand'
+import Bot, { AuthLevel } from '../bot'
+import ICommand from '../interfaces/ICommand'
 import { Message } from 'discord.js'
 
 const changePrefix: ICommand = {
